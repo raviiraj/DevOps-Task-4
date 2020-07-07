@@ -1,0 +1,20 @@
+FROM centos
+
+
+COPY kubernetes.repo /etc/yum.repos.d/
+RUN yum install openssh-server -y
+RUN yum install java -y
+RUN yum install kubectl -y
+RUN yum install git -y
+RUN yum install sudo -y
+
+
+COPY ca.crt .
+COPY client.key .
+COPY client.crt .
+
+
+COPY config /root/.kube/
+RUN ssh-keygen -A
+CMD ["/usr/sbin/sshd", "-D"]
+CMD /bin/bash
